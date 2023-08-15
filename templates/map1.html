@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map Example</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <div id="map" style="width: 100%; height: 500px;"></div>
+
+    <script>
+        var map = L.map('map').setView([0, 0], 2);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        var latestData = {{ latest_data_json|safe }};
+        var otherData = {{ json_data|safe }};
+
+        // var latestData = latest_data_json; var jsonData = {{ json_data|safe }}
+        // var otherData = json_data;
+
+        var latestMarker = L.marker([latestData.latitude, latestData.longitude]).addTo(map)
+            .bindPopup('Latest Data: ' + latestData.timestamp)
+            .openPopup();
+
+        for (var i = 0; i < otherData.length; i++) {
+            L.circleMarker([otherData[i][0], otherData[i][1]], {
+                radius: 5,
+                color: 'blue',
+                fillOpacity: 0.5,
+            }).addTo(map);
+        }
+    </script>
+    
+</body>
+</html>

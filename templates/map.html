@@ -1,0 +1,30 @@
+<!-- locations.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map with Pins</title>
+    <!-- Include Leaflet CSS and JavaScript -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <div id="map" style="height: 400px;"></div>
+
+    <script>
+        var map = L.map('map').setView([0, 0], 2); // Set initial map view
+
+        // Add a tile layer (you can choose other tile providers if you prefer)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Pass the Django data as JSON to JavaScript
+        var locations = JSON.parse('{{ locations_json|escapejs }}');
+
+        for (var i = 0; i < locations.length; i++) {
+            var marker = L.marker([locations[i].latitude, locations[i].longitude]).addTo(map);
+            marker.bindPopup(locations[i]['device__device_name']).openPopup();
+        }
+    </script>
+</body>
+</html>
